@@ -6,6 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
+    // Login Supabase
     $login = $supabase->authLogin($email, $password);
 
     if (isset($login["access_token"])) {
@@ -13,14 +14,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["token"] = $login["access_token"];
         $_SESSION["user_id"] = $login["user"]["id"];
 
-        // Verificar si es admin
+        // Consultar perfil del usuario
         $perfil = $supabase->from(
             "profiles",
             "GET",
             null,
-            "id=eq.{$_SESSION['user_id']}"
+            "id=eq." . $_SESSION['user_id']
         );
 
+        // Validar si es admin
         if (!empty($perfil) && isset($perfil[0]["rol"]) && $perfil[0]["rol"] === "admin") {
             header("Location: ../admin/index.php");
             exit;
