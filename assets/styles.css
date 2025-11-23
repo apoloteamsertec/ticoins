@@ -4,41 +4,32 @@
 body {
     margin: 0;
     padding: 0;
-    background: #F6F7F9;
+    background: #F1F3F6;
     font-family: 'Inter', sans-serif;
     color: #222;
 }
 
-.container {
-    width: 95%;
-    max-width: 1100px;
-    margin: 40px auto;
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-}
-
 /* ============================
-   NAVBAR SUPERIOR
+   NAVBAR SUPERIOR TIPO APP
 ============================ */
 .topbar {
     width: 100%;
     background: #3EB04B;
-    padding: 12px 20px;
+    padding: 10px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     position: sticky;
     top: 0;
     z-index: 999;
+    height: 55px;
 }
 
 .topbar .logo {
-    font-size: 20px;
-    color: white;
+    font-size: 18px;
     font-weight: 600;
+    color: white;
 }
 
 .menu {
@@ -46,7 +37,7 @@ body {
     padding: 0;
     margin: 0;
     display: flex;
-    gap: 18px;
+    gap: 20px;
 }
 
 .menu li a {
@@ -55,26 +46,34 @@ body {
     font-weight: 500;
 }
 
-/* === MOBILE NAV === */
+/* Botón de menú mobile */
 .menu-toggle {
     display: none;
-    cursor: pointer;
     font-size: 26px;
     color: white;
+    cursor: pointer;
 }
 
-@media (max-width: 768px) {
+/* NAV RESPONSIVE */
+@media (max-width: 750px) {
     .menu {
         display: none;
-        flex-direction: column;
-        background: #3EB04B;
-        position: absolute;
-        top: 60px;
+        position: fixed;
+        top: 55px;
         right: 0;
-        width: 200px;
-        padding: 15px 0;
-        border-radius: 0 0 0 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        width: 80%;
+        height: calc(100vh - 55px);
+        background: #3EB04B;
+        flex-direction: column;
+        padding: 25px 0;
+        gap: 18px;
+        box-shadow: -4px 0 14px rgba(0,0,0,0.25);
+        animation: slide .3s ease;
+    }
+
+    @keyframes slide {
+        from { right: -100%; }
+        to { right: 0; }
     }
 
     .menu.show {
@@ -87,12 +86,64 @@ body {
 }
 
 /* ============================
+   CONTENEDOR PRINCIPAL MODO APP
+============================ */
+.container {
+    width: 100%;
+    max-width: 680px;
+    margin: 25px auto;
+    background: #fff;
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+/* Desktop grande */
+@media (min-width: 1100px) {
+    body {
+        display: flex;
+        justify-content: center;
+        background: #E9ECF1;
+        padding-top: 40px;
+    }
+
+    .container {
+        margin-top: 0;
+    }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .container {
+        max-width: 90%;
+        border-radius: 14px;
+    }
+}
+
+/* Móvil — estilo app completa */
+@media (max-width: 600px) {
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0;
+        min-height: calc(100vh - 55px);
+        padding: 18px 16px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+/* ============================
    TÍTULOS
 ============================ */
 h1, h2 {
     font-weight: 600;
     margin-top: 0;
-    color: #222;
 }
 
 /* ============================
@@ -108,11 +159,10 @@ h1, h2 {
     font-size: 15px;
     font-weight: 500;
     text-decoration: none;
-    transition: 0.25s;
+    transition: .25s;
 }
 
-.btn:hover,
-button:hover {
+.btn:hover, button:hover {
     background: #349a41;
 }
 
@@ -120,6 +170,7 @@ button:hover {
     background: #3EB04B !important;
     padding: 7px 12px;
     border-radius: 6px;
+    color: white;
 }
 
 .btn-rechazar {
@@ -132,11 +183,16 @@ button:hover {
 /* ============================
    TABLAS RESPONSIVE
 ============================ */
+.tabla-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
 .tabla {
     width: 100%;
     border-collapse: collapse;
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 3px 12px rgba(0,0,0,0.05);
 }
@@ -145,6 +201,8 @@ button:hover {
     background: #3EB04B;
     color: white;
     padding: 12px;
+    text-align: left;
+    font-weight: 600;
 }
 
 .tabla td {
@@ -152,19 +210,14 @@ button:hover {
     border-bottom: 1px solid #eee;
 }
 
-.tabla-container {
-    width: 100%;
-    overflow-x: auto;
+.tabla tr:hover {
+    background: #f5fff6;
 }
 
-@media (max-width: 768px) {
-    .container {
-        margin: 20px auto;
-        padding: 18px;
-    }
-
-    h2 {
-        font-size: 22px;
+@media (max-width: 600px) {
+    .tabla td, .tabla th {
+        padding: 10px 8px;
+        font-size: 14px;
     }
 }
 
@@ -174,8 +227,15 @@ button:hover {
 .form-box {
     background: white;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 12px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+}
+
+.form-box label {
+    font-weight: 500;
+    margin: 8px 0 5px;
+    display: block;
 }
 
 .form-box input,
@@ -183,11 +243,11 @@ button:hover {
 .form-box textarea {
     width: 100%;
     padding: 10px;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid #ccc;
-    background: #fff;
     font-size: 14px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    background: #fff;
 }
 
 /* ============================
@@ -205,5 +265,24 @@ button:hover {
 
 .login-box input {
     width: 100%;
+    margin-bottom: 15px;
+}
+
+/* ============================
+   ALERTAS
+============================ */
+.error {
+    background: #ffebee;
+    border-left: 4px solid #E53935;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.success {
+    background: #e8f5e9;
+    border-left: 4px solid #3EB04B;
+    padding: 12px;
+    border-radius: 6px;
     margin-bottom: 15px;
 }
