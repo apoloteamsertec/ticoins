@@ -1,4 +1,4 @@
-<?php include "header.php"; require "../config/supabase.php"; ?>
+<?php include "header.php"; require_once "../config/supabase.php"; ?>
 
 <?php
 $id = $_GET["id"];
@@ -30,3 +30,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <button type="submit">Guardar cambios</button>
 </form>
+
+
