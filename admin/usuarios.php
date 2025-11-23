@@ -19,7 +19,7 @@ $usuarios = $supabase->from(
 
 <h1>Usuarios</h1>
 
-<a href="usuario_nuevo.php" class="btn">➕ Nuevo usuario/a>
+<a href="usuario_nuevo.php" class="btn">➕ Nuevo usuario</a>
 <br><br>
 
 <table class="tabla">
