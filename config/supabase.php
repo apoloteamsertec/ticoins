@@ -1,13 +1,14 @@
-	<?php
+<?php
 class SupabaseClient {
     public $url;
     public $publishable;
     public $secret;
 
     function __construct() {
-        $this->url = getenv("https://uuzufvjfycvwznyzsprp.supabase.co");
-        $this->publishable = getenv("sb_publishable_JHyuNiaD-fYajrQEeiZD4A_7ViGVAI9");
-        $this->secret = getenv("sb_secret_LRnhhGFZJ8I-6pEGshU-5w_E-vBOffN");
+        // NOMBRES de las variables, NO los valores
+        $this->url = getenv("SUPABASE_URL");
+        $this->publishable = getenv("SUPABASE_PUBLISHABLE_KEY");
+        $this->secret = getenv("SUPABASE_SECRET_KEY");
     }
 
     // LOGIN (NUEVA API)
