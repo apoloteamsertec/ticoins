@@ -13,7 +13,7 @@ body {
    NAVBAR SUPERIOR
 ============================ */
 .topbar {
-    width: 100%;
+    width: 70%;
     background: #3EB04B;
     padding: 10px 18px;
     display: flex;
