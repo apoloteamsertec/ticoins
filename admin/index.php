@@ -2,3 +2,6 @@
 
 <h1>Panel de Administración</h1>
 <p>Bienvenido! Selecciona una opción del menú.</p>
+</div> <!-- cierre container -->
+</body>
+</html>

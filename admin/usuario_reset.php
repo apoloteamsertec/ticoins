@@ -38,3 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <button type="submit">Actualizar</button>
 </form>
+</div> <!-- cierre container -->
+</body>
+</html>

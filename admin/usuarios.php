@@ -51,3 +51,6 @@ $usuarios = $supabase->from(
     </tr>
     <?php endforeach; ?>
 </table>
+</div> <!-- cierre container -->
+</body>
+</html>

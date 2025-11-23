@@ -11,3 +11,7 @@ $supabase->from("premios", "PATCH", [
 
 header("Location: premios.php");
 exit;
+
+</div> <!-- cierre container -->
+</body>
+</html>

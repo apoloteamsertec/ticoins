@@ -1,68 +1,115 @@
 /* ============================
-   ESTILO GENERAL
+   TIPOGRAFÍA Y BASE
 ============================ */
 body {
     margin: 0;
     padding: 0;
-    background: #f4f4f4;
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background: #F6F7F9;
+    font-family: 'Inter', sans-serif;
     color: #222;
 }
 
-/* Contenedor general */
+/* contenedor general para cada página */
 .container {
     width: 95%;
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-/* Títulos */
+/* ============================
+   NAVBAR SUPERIOR
+============================ */
+.topbar {
+    width: 100%;
+    background: #3EB04B;
+    padding: 12px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.topbar .logo {
+    font-size: 20px;
+    color: white;
+    font-weight: 600;
+}
+
+.topbar .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 18px;
+}
+
+.topbar .menu li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity .2s;
+}
+
+.topbar .menu li a:hover {
+    opacity: 0.7;
+}
+
+.topbar .menu .logout {
+    background: white;
+    color: #3EB04B !important;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* ============================
+   TÍTULOS
+============================ */
 h1, h2 {
-    text-align: left;
+    margin-top: 0;
     font-weight: 600;
     color: #222;
-    margin-bottom: 15px;
 }
 
 /* ============================
    BOTONES
 ============================ */
-button, .btn, input[type="submit"] {
+.btn, button, input[type="submit"] {
     background: #3EB04B;
     color: white;
     border: none;
     padding: 10px 18px;
-    font-size: 15px;
     border-radius: 8px;
     cursor: pointer;
-    transition: 0.25s ease;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.25s;
 }
 
-button:hover, .btn:hover, input[type="submit"]:hover {
-    background: #34a243;
+.btn:hover, button:hover, input[type="submit"]:hover {
+    background: #349a41;
 }
 
 .btn-aceptar {
     background: #3EB04B;
-    color: #fff;
-    padding: 8px 12px;
+    color: white;
+    padding: 8px 14px;
     border-radius: 6px;
     text-decoration: none;
-}
-.btn-aceptar:hover {
-    background: #349f40;
 }
 
 .btn-rechazar {
-    background: #d9534f;
-    color: #fff;
-    padding: 8px 12px;
+    background: #E53935;
+    color: white;
+    padding: 8px 14px;
     border-radius: 6px;
     text-decoration: none;
-}
-.btn-rechazar:hover {
-    background: #c0392b;
 }
 
 /* ============================
@@ -71,17 +118,15 @@ button:hover, .btn:hover, input[type="submit"]:hover {
 .form-box {
     background: white;
     padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
     margin-bottom: 20px;
 }
 
 .form-box label {
     display: block;
-    font-size: 14px;
-    margin-top: 12px;
-    margin-bottom: 5px;
+    margin: 8px 0 5px;
+    font-weight: 500;
 }
 
 .form-box input,
@@ -89,105 +134,83 @@ button:hover, .btn:hover, input[type="submit"]:hover {
 .form-box textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 8px;
-    transition: 0.2s;
-    font-size: 14px;
+    border: 1px solid #ccc;
     background: #fff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    font-size: 14px;
+    transition: 0.2s ease;
 }
 
 .form-box input:focus,
 .form-box select:focus,
 .form-box textarea:focus {
     border-color: #3EB04B;
-    box-shadow: 0 0 0 2px rgba(62,176,75,0.3);
-    outline: none;
+    box-shadow: 0 0 0 3px rgba(62,176,75,0.3);
 }
 
 /* ============================
    TABLAS
 ============================ */
-.table, .tabla {
+.tabla {
     width: 100%;
     border-collapse: collapse;
     background: white;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
 }
 
-.table th, .tabla th {
+.tabla th {
     background: #3EB04B;
     color: white;
     padding: 12px;
-    font-weight: 600;
     text-align: left;
+    font-weight: 600;
 }
 
-.table td, .tabla td {
+.tabla td {
     padding: 12px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #eee;
 }
 
-.table tr:hover, .tabla tr:hover {
-    background: #f7fff7;
+.tabla tr:hover {
+    background: #f5fff6;
 }
 
 /* ============================
-   LOGIN / CAJAS CENTRADAS
+   LOGIN
 ============================ */
 .login-box {
     max-width: 380px;
     background: white;
-    padding: 35px 30px;
-    border-radius: 15px;
-    margin: 70px auto;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    padding: 35px;
+    border-radius: 12px;
+    margin: 80px auto;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
     text-align: center;
 }
 
-.login-box h2 {
-    margin-bottom: 20px;
-}
-
 .login-box input {
+    width: 100%;
     margin-bottom: 15px;
 }
 
 /* ============================
-   MENSAJES
+   ALERTAS
 ============================ */
 .error {
-    background: #ffdddd;
-    border-left: 5px solid #e53935;
-    padding: 10px;
+    background: #ffebee;
+    border-left: 4px solid #E53935;
+    padding: 12px;
     border-radius: 6px;
     margin-bottom: 15px;
 }
 
 .success {
-    background: #ddffdd;
-    border-left: 5px solid #3EB04B;
-    padding: 10px;
+    background: #e8f5e9;
+    border-left: 4px solid #3EB04B;
+    padding: 12px;
     border-radius: 6px;
     margin-bottom: 15px;
-}
-
-/* ============================
-   IMÁGENES
-============================ */
-img {
-    border-radius: 8px;
-}
-
-/* ============================
-   MOBILE
-============================ */
-@media (max-width: 768px) {
-    .tabla, .table {
-        font-size: 14px;
-    }
-    .tabla td img {
-        width: 60px;
-    }
 }

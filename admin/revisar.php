@@ -70,3 +70,7 @@ $tarea = $supabase->from("tareas", "GET", null, "id=eq.{$p['tarea_id']}")[0];
 <?php endforeach; ?>
 
 </table>
+
+</div> <!-- cierre container -->
+</body>
+</html>
