@@ -7,10 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST["password"];
 
     $login = $supabase->authLogin($email, $password);
-	echo "<pre>";
-var_dump($login);
-echo "</pre>";
-exit;
 
     if (isset($login["access_token"])) {
 
@@ -25,18 +21,18 @@ exit;
             "id=eq.{$_SESSION['user_id']}"
         );
 
-        if ($perfil && $perfil[0]["rol"] === "admin") {
+        if (!empty($perfil) && isset($perfil[0]["rol"]) && $perfil[0]["rol"] === "admin") {
             header("Location: ../admin/index.php");
             exit;
         } else {
             $error = "No tienes permisos de administrador.";
         }
+
     } else {
         $error = "Credenciales incorrectas.";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
