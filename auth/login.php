@@ -7,6 +7,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST["password"];
 
     $login = $supabase->authLogin($email, $password);
+	echo "<pre>";
+var_dump($login);
+echo "</pre>";
+exit;
 
     if (isset($login["access_token"])) {
 
