@@ -1,33 +1,53 @@
-<?php include "header.php"; require "../config/supabase.php"; ?>
-
-<h2>Usuarios</h2>
-
-<a href="usuario_nuevo.php" class="btn">➕ Crear usuario</a>
-<br><br>
-
 <?php
-$usuarios = $supabase->from("profiles", "GET");
+session_start();
+require '../config/supabase.php';
+
+if (!isset($_SESSION["token"])) {
+    header("Location: ../auth/login.php");
+    exit;
+}
+
+// Obtener todos los usuarios tipo niño
+$usuarios = $supabase->from(
+    "profiles",
+    "GET",
+    null,
+    "rol=eq.nino&select=id,nombre_completo,username,coins,foto_perfil"
+);
 ?>
+<?php include 'header.php'; ?>
+
+<h1>Usuarios (Niños / Sobrinos)</h1>
+
+<a href="usuario_nuevo.php" class="btn">+ Nuevo Usuario</a>
 
 <table class="tabla">
     <tr>
+        <th>Foto</th>
         <th>Nombre</th>
-        <th>Username</th>
+        <th>Usuario</th>
         <th>Coins</th>
-        <th>Rol</th>
         <th>Acciones</th>
     </tr>
 
-<?php foreach($usuarios as $u): ?>
+    <?php foreach ($usuarios as $u): ?>
     <tr>
-        <td><?= $u["nombre_completo"] ?></td>
-        <td>@<?= $u["username"] ?></td>
-        <td><?= $u["coins"] ?></td>
-        <td><?= $u["rol"] ?></td>
         <td>
-            <a href="usuario_editar.php?id=<?= $u['id'] ?>">✏️ Editar</a>
-            <a href="usuario_reset.php?id=<?= $u['id'] ?>">🔐 Reset Pass</a>
+            <?php if ($u["foto_perfil"]): ?>
+                <img src="<?= $u["foto_perfil"] ?>" width="40" style="border-radius:50%;">
+            <?php else: ?>
+                <span>—</span>
+            <?php endif; ?>
+        </td>
+
+        <td><?= $u["nombre_completo"] ?></td>
+        <td><?= $u["username"] ?></td>
+        <td><?= $u["coins"] ?></td>
+
+        <td>
+            <a href="usuario_editar.php?id=<?= $u["id"] ?>">Editar</a> |
+            <a href="usuario_reset.php?id=<?= $u["id"] ?>">Reset Pass</a>
         </td>
     </tr>
-<?php endforeach; ?>
+    <?php endforeach; ?>
 </table>

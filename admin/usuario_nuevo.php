@@ -1,71 +1,56 @@
-<?php include "header.php"; require "../config/supabase.php"; ?>
-
 <?php
-$mensaje = "";
+session_start();
+require '../config/supabase.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
     $nombre = $_POST["nombre"];
     $username = $_POST["username"];
     $password = $_POST["password"];
+    $emailFake = $username . "@ticoins.local";
 
-    // Generar email interno (Supabase lo requiere)
-    $email = $username . "@sistema.local";
-
-    // 1. Crear usuario en AUTH
-    $data = [
-        "email" => $email,
+    // Crear usuario en Auth
+    $payload = json_encode([
+        "email" => $emailFake,
         "password" => $password
-    ];
+    ]);
 
-    $url = $supabase->url . "/auth/v1/admin/users";
-    $headers = [
-        "apikey: {$supabase->service_key}",
-        "Authorization: Bearer {$supabase->service_key}",
-        "Content-Type: application/json"
-    ];
-
-    $curl = curl_init($url);
+    $curl = curl_init(getenv("SUPABASE_URL") . "/auth/v1/signup");
     curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-    $respuesta = json_decode(curl_exec($curl), true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, [
+        "apikey: " . getenv("SUPABASE_PUBLISHABLE_KEY"),
+        "Authorization: Bearer " . getenv("SUPABASE_PUBLISHABLE_KEY"),
+        "Content-Type: application/json"
+    ]);
 
-    if (isset($respuesta["id"])) {
-        $uid = $respuesta["id"];
+    $res = curl_exec($curl);
+    $nuevo = json_decode($res, true);
 
-        // 2. Crear perfil
-        $supabase->from("profiles", "POST", [
-            "id" => $uid,
-            "nombre_completo" => $nombre,
-            "username" => $username,
-            "rol" => "nino"
-        ]);
+    $id = $nuevo["user"]["id"];
 
-        $mensaje = "Usuario creado correctamente.";
-    } else {
-        $mensaje = "Error creando usuario: " . json_encode($respuesta);
-    }
+    // Insertar perfil
+    $supabase->from("profiles", "POST", [
+        "id" => $id,
+        "nombre_completo" => $nombre,
+        "username" => $username,
+        "rol" => "nino",
+        "coins" => 0
+    ]);
+
+    header("Location: usuarios.php");
+    exit;
 }
 ?>
+<?php include 'header.php'; ?>
 
-<h2>Crear nuevo usuario</h2>
+<h2>Nuevo Usuario</h2>
 
-<?php if($mensaje): ?>
-<p><strong><?= $mensaje ?></strong></p>
-<?php endif; ?>
-
-<form method="POST" class="form-box">
-    <label>Nombre completo</label>
-    <input type="text" name="nombre" required>
-
-    <label>Username</label>
-    <input type="text" name="username" required>
-
-    <label>Contraseña</label>
-    <input type="password" name="password" required>
-
+<form method="POST">
+    <input type="text" name="nombre" placeholder="Nombre completo" required><br>
+    <input type="text" name="username" placeholder="Username" required><br>
+    <input type="password" name="password" placeholder="Contraseña" required><br>
     <button type="submit">Crear usuario</button>
 </form>
-
