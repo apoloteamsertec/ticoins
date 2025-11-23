@@ -1,11 +1,12 @@
 /* ============================
    TIPOGRAFÍA Y BASE
 ============================ */
-body {
+html, body {
     margin: 0;
     padding: 0;
-    background: #F1F3F6;
+    overflow-x: hidden;
     font-family: 'Inter', sans-serif;
+    background: #F1F3F6;
     color: #222;
 }
 
@@ -13,7 +14,7 @@ body {
    NAVBAR SUPERIOR
 ============================ */
 .topbar {
-    width: 70%;
+    width: 100%;                 /* ← FIX PRINCIPAL */
     background: #3EB04B;
     padding: 10px 18px;
     display: flex;
