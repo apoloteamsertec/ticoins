@@ -5,7 +5,6 @@ class SupabaseClient {
     public $secret;
 
     function __construct() {
-        // NOMBRES de las variables, NO los valores
         $this->url = getenv("SUPABASE_URL");
         $this->publishable = getenv("SUPABASE_PUBLISHABLE_KEY");
         $this->secret = getenv("SUPABASE_SECRET_KEY");
@@ -26,7 +25,7 @@ class SupabaseClient {
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             "apikey: {$this->publishable}",
-            "Authorization: Bearer {$this->secret}",
+            "Authorization: Bearer {$this->publishable}",
             "Content-Type: application/json"
         ]);
 
@@ -39,12 +38,12 @@ class SupabaseClient {
         $url = "{$this->url}/rest/v1/{$table}?{$filter}";
 
         $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($method));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         $headers = [
             "apikey: {$this->publishable}",
-            "Authorization: Bearer {$this->secret}",
+            "Authorization: Bearer {$this->publishable}",
             "Content-Type: application/json",
             "Prefer: return=representation"
         ];
