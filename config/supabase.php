@@ -1,13 +1,13 @@
-    <?php
+<?php
 class SupabaseClient {
     public $url;
     public $anon_key;
     public $service_key;
 
-       function __construct() {
-        $this->url = "https://uuzufvjfycvwznyzsprp.supabase.co";
-        $this->anon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1enVmdmpmeWN2d3pueXpzcHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4Mzk5MTMsImV4cCI6MjA3OTQxNTkxM30.yaCtI498PbL0y_dz9-fnWuUhWItFxUZ3fXzKKCdhhgo";
-        $this->service_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1enVmdmpmeWN2d3pueXpzcHJwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzgzOTkxMywiZXhwIjoyMDc5NDE1OTEzfQ.RL60LkxJjQz2ESB_88tqjaiiE8GmG3SFrtWBjcH0xgw";
+    function __construct() {
+        $this->url = getenv("https://uuzufvjfycvwznyzsprp.supabase.co");
+        $this->anon_key = getenv("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1enVmdmpmeWN2d3pueXpzcHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4Mzk5MTMsImV4cCI6MjA3OTQxNTkxM30.yaCtI498PbL0y_dz9-fnWuUhWItFxUZ3fXzKKCdhhgo");
+        $this->service_key = getenv("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1enVmdmpmeWN2d3pueXpzcHJwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzgzOTkxMywiZXhwIjoyMDc5NDE1OTEzfQ.RL60LkxJjQz2ESB_88tqjaiiE8GmG3SFrtWBjcH0xgw");
     }
 
     function authLogin($email, $password) {
