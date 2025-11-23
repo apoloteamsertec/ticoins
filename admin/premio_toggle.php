@@ -1,4 +1,4 @@
-<?php require "../auth/check_admin.php"; require "../config/supabase.php";
+<?php require "../auth/check_admin.php"; require_once "../config/supabase.php";
 
 $id = $_GET["id"];
 

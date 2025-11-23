@@ -1,4 +1,4 @@
-<?php include "header.php"; require "../config/supabase.php"; ?>
+<?php include "header.php"; require_once "../config/supabase.php"; ?>
 
 <?php
 $mensaje = "";

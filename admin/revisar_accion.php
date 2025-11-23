@@ -1,6 +1,6 @@
 <?php
-require "../auth/check_admin.php";
-require "../config/supabase.php";
+require_once "../auth/check_admin.php";
+require_once "../config/supabase.php";
 
 $id = $_GET["id"];       // id de tareas_realizadas
 $accion = $_GET["accion"];
