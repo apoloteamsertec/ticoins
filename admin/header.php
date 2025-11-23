@@ -6,14 +6,14 @@ if (session_status() === PHP_SESSION_NONE) {
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel Admin</title>
-<link rel="stylesheet" href="../assets/styles.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
+
 <nav class="topbar">
     <div class="logo">TI Coins Admin</div>
 
@@ -35,4 +35,5 @@ function toggleMenu() {
 }
 </script>
 
-<div class="container">
+<div class="page">
+    <div class="container">

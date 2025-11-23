@@ -66,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <button type="submit">Crear premio</button>
 </form>
 
-</div> <!-- cierre container -->
+ </div><!-- .container -->
+</div><!-- .page -->
 </body>
 </html>

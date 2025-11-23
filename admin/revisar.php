@@ -71,6 +71,7 @@ $tarea = $supabase->from("tareas", "GET", null, "id=eq.{$p['tarea_id']}")[0];
 
 </table>
 
-</div> <!-- cierre container -->
+ </div><!-- .container -->
+</div><!-- .page -->
 </body>
 </html>

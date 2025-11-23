@@ -53,7 +53,7 @@ body {
     cursor: pointer;
 }
 
-/* RESPONSIVE NAV */
+/* NAV RESPONSIVE */
 @media (max-width: 750px) {
     .menu {
         display: none;
@@ -111,7 +111,7 @@ body {
     }
 }
 
-/* Mobile APP Mode */
+/* Mobile – modo app */
 @media (max-width: 600px) {
     .page {
         padding: 0;
@@ -222,7 +222,7 @@ h1, h2 {
 }
 
 /* ============================
-   LOGIN PROFESIONAL
+   LOGIN
 ============================ */
 .login-box-wrapper {
     width: 100%;
@@ -241,41 +241,6 @@ h1, h2 {
     border-radius: 16px;
     box-shadow: 0 6px 24px rgba(0,0,0,0.15);
     text-align: center;
-}
-
-.login-box h2 {
-    margin-bottom: 20px;
-}
-
-.login-box input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    margin-bottom: 15px;
-}
-
-.error {
-    background: #ffebee;
-    border-left: 4px solid #E53935;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-
-/* ============================
-   LOGIN PRO MEJORADO
-============================ */
-
-.login-logo {
-    width: 80px;
-    margin-bottom: 15px;
-    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.15));
-}
-
-.login-box {
     transition: transform .25s ease, box-shadow .25s ease;
 }
 
@@ -284,12 +249,18 @@ h1, h2 {
     box-shadow: 0 8px 28px rgba(0,0,0,0.18);
 }
 
+.login-box h2 {
+    margin-bottom: 20px;
+}
+
 .login-box input {
-    background: #F9FAFB;
+    width: 100%;
+    padding: 12px 14px;
     border-radius: 10px;
     border: 1px solid #D1D5DB;
-    padding: 12px 14px;
     font-size: 15px;
+    margin-bottom: 15px;
+    background: #F9FAFB;
     transition: .2s;
 }
 
@@ -304,4 +275,15 @@ h1, h2 {
     padding: 12px 20px;
     font-size: 16px;
     border-radius: 10px;
+}
+
+/* ============================
+   ALERTAS
+============================ */
+.error {
+    background: #ffebee;
+    border-left: 4px solid #E53935;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
 }

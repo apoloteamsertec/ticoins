@@ -42,6 +42,7 @@ $premios = $supabase->from("premios", "GET");
 <?php endforeach; ?>
 
 </table>
-</div> <!-- cierre container -->
+ </div><!-- .container -->
+</div><!-- .page -->
 </body>
 </html>

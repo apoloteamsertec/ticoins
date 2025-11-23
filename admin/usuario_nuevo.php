@@ -54,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="password" name="password" placeholder="Contraseña" required><br>
     <button type="submit">Crear usuario</button>
 </form>
-</div> <!-- cierre container -->
+ </div><!-- .container -->
+</div><!-- .page -->
 </body>
 </html>

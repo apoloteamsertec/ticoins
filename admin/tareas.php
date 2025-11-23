@@ -47,3 +47,7 @@ foreach ($asignados as $a) {
 
 <?php endforeach; ?>
 </table>
+ </div><!-- .container -->
+</div><!-- .page -->
+</body>
+</html>
