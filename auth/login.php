@@ -15,12 +15,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["user_id"] = $login["user"]["id"];
 
         // Consultar perfil del usuario
-        $perfil = $supabase->from(
-            "profiles",
-            "GET",
-            null,
-            "id=eq." . $_SESSION['user_id']
-        );
+$perfil = $supabase->from(
+    "profiles",
+    "GET",
+    null,
+    "id=eq." . $_SESSION['user_id']
+);
+
+// DEBUG — ver qué devuelve Supabase
+echo "<pre>";
+var_dump($perfil);
+echo "</pre>";
+exit;
+
 
         // Validar si es admin
         if (!empty($perfil) && isset($perfil[0]["rol"]) && $perfil[0]["rol"] === "admin") {
