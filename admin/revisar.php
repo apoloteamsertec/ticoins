@@ -3,12 +3,12 @@
 <h2>Revisión de Tareas</h2>
 
 <?php
-// obtener solo las tareas en revisión
+// obtener solo tareas en "revision"
 $pendientes = $supabase->from(
     "tareas_realizadas",
     "GET",
     null,
-    "estado=eq.revision"
+    "estado=eq.revision&order=fecha_envio.desc"
 );
 ?>
 
@@ -24,10 +24,10 @@ $pendientes = $supabase->from(
 <?php foreach ($pendientes as $p): ?>
 
 <?php
-// obtener info del niño
+// obtener usuario
 $usuario = $supabase->from("profiles", "GET", null, "id=eq.{$p['usuario_id']}")[0];
 
-// obtener info de la tarea
+// obtener tarea
 $tarea = $supabase->from("tareas", "GET", null, "id=eq.{$p['tarea_id']}")[0];
 ?>
 
