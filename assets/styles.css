@@ -10,7 +10,7 @@ body {
 }
 
 /* ============================
-   NAVBAR SUPERIOR TIPO APP
+   NAVBAR SUPERIOR
 ============================ */
 .topbar {
     width: 100%;
@@ -46,7 +46,6 @@ body {
     font-weight: 500;
 }
 
-/* Botón de menú mobile */
 .menu-toggle {
     display: none;
     font-size: 26px;
@@ -54,26 +53,26 @@ body {
     cursor: pointer;
 }
 
-/* NAV RESPONSIVE */
+/* RESPONSIVE NAV */
 @media (max-width: 750px) {
     .menu {
         display: none;
         position: fixed;
         top: 55px;
         right: 0;
-        width: 80%;
+        width: 75%;
         height: calc(100vh - 55px);
         background: #3EB04B;
         flex-direction: column;
         padding: 25px 0;
-        gap: 18px;
+        gap: 22px;
         box-shadow: -4px 0 14px rgba(0,0,0,0.25);
-        animation: slide .3s ease;
+        animation: slide .35s ease;
     }
 
     @keyframes slide {
-        from { right: -100%; }
-        to { right: 0; }
+        from { transform: translateX(100%); }
+        to { transform: translateX(0); }
     }
 
     .menu.show {
@@ -86,30 +85,22 @@ body {
 }
 
 /* ============================
-   CONTENEDOR PRINCIPAL MODO APP
+   CONTENIDO CENTRADO (APP)
 ============================ */
-.container {
+.page {
     width: 100%;
-    max-width: 680px;
-    margin: 25px auto;
-    background: #fff;
-    padding: 22px;
-    border-radius: 18px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: center;
+    padding: 25px 0;
 }
 
-/* Desktop grande */
-@media (min-width: 1100px) {
-    body {
-        display: flex;
-        justify-content: center;
-        background: #E9ECF1;
-        padding-top: 40px;
-    }
-
-    .container {
-        margin-top: 0;
-    }
+.container {
+    width: 100%;
+    max-width: 720px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
 }
 
 /* Tablet */
@@ -120,21 +111,17 @@ body {
     }
 }
 
-/* Móvil — estilo app completa */
+/* Mobile APP Mode */
 @media (max-width: 600px) {
-    body {
-        background: white;
+    .page {
         padding: 0;
-        margin: 0;
     }
-
     .container {
         max-width: 100%;
-        margin: 0;
         min-height: calc(100vh - 55px);
-        padding: 18px 16px;
         border-radius: 0;
         box-shadow: none;
+        padding: 18px;
     }
 }
 
@@ -167,7 +154,7 @@ h1, h2 {
 }
 
 .btn-aceptar {
-    background: #3EB04B !important;
+    background: #3EB04B;
     padding: 7px 12px;
     border-radius: 6px;
     color: white;
@@ -181,10 +168,9 @@ h1, h2 {
 }
 
 /* ============================
-   TABLAS RESPONSIVE
+   TABLAS
 ============================ */
 .tabla-container {
-    width: 100%;
     overflow-x: auto;
 }
 
@@ -202,7 +188,6 @@ h1, h2 {
     color: white;
     padding: 12px;
     text-align: left;
-    font-weight: 600;
 }
 
 .tabla td {
@@ -212,13 +197,6 @@ h1, h2 {
 
 .tabla tr:hover {
     background: #f5fff6;
-}
-
-@media (max-width: 600px) {
-    .tabla td, .tabla th {
-        padding: 10px 8px;
-        font-size: 14px;
-    }
 }
 
 /* ============================
@@ -232,12 +210,6 @@ h1, h2 {
     margin-bottom: 20px;
 }
 
-.form-box label {
-    font-weight: 500;
-    margin: 8px 0 5px;
-    display: block;
-}
-
 .form-box input,
 .form-box select,
 .form-box textarea {
@@ -245,44 +217,91 @@ h1, h2 {
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    font-size: 14px;
-    margin-bottom: 12px;
     background: #fff;
+    margin-bottom: 12px;
 }
 
 /* ============================
-   LOGIN
+   LOGIN PROFESIONAL
 ============================ */
+.login-box-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #EDEFF2;
+}
+
 .login-box {
     max-width: 380px;
+    width: 90%;
     background: white;
     padding: 35px;
-    border-radius: 12px;
-    margin: 80px auto;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
     text-align: center;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
 }
 
 .login-box input {
     width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
     margin-bottom: 15px;
 }
 
-/* ============================
-   ALERTAS
-============================ */
 .error {
     background: #ffebee;
     border-left: 4px solid #E53935;
     padding: 12px;
-    border-radius: 6px;
+    border-radius: 8px;
     margin-bottom: 15px;
 }
 
-.success {
-    background: #e8f5e9;
-    border-left: 4px solid #3EB04B;
-    padding: 12px;
-    border-radius: 6px;
+
+/* ============================
+   LOGIN PRO MEJORADO
+============================ */
+
+.login-logo {
+    width: 80px;
     margin-bottom: 15px;
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.15));
+}
+
+.login-box {
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.login-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+}
+
+.login-box input {
+    background: #F9FAFB;
+    border-radius: 10px;
+    border: 1px solid #D1D5DB;
+    padding: 12px 14px;
+    font-size: 15px;
+    transition: .2s;
+}
+
+.login-box input:focus {
+    border-color: #3EB04B;
+    box-shadow: 0 0 0 3px rgba(62,176,75,0.25);
+    background: #fff;
+}
+
+.login-box button {
+    margin-top: 8px;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 10px;
 }
