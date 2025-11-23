@@ -17,9 +17,10 @@ $usuarios = $supabase->from(
 ?>
 <?php include 'header.php'; ?>
 
-<h1>Usuarios (Niños / Sobrinos)</h1>
+<h1>Usuarios</h1>
 
-<a href="usuario_nuevo.php" class="btn">+ Nuevo Usuario</a>
+<a href="usuario_nuevo.php" class="btn">➕ Nuevo usuario/a>
+<br><br>
 
 <table class="tabla">
     <tr>
