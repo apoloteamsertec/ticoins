@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
 ==================================-->
 <header class="topbar-child">
     <div class="hola">
-        HOLA <span>@<?= strtoupper(htmlspecialchars($username)) ?></span>
+        HOLA <span><?= strtoupper(htmlspecialchars($nombre_completo)) ?></span>
     </div>
 
     <div class="hamburger">

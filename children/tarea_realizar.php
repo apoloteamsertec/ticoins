@@ -11,9 +11,8 @@ if (!isset($_GET["id"])) {
 
 $tarea_id = $_GET["id"];
 
-// 🔹 Datos del usuario (temporal)
-// Luego se reemplaza con el login real del niño
-$usuario_id   = "e373a04f-156b-4fc8-98d7-b6ea739d939e";
+// 🔹 Datos del usuario (TEMPORAL, reemplazar por login real)
+$usuario_id = "e373a04f-156b-4fc8-98d7-b6ea739d939e";
 
 // --------------------------------------------------
 //  Obtener info de la tarea
@@ -34,21 +33,43 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $error = "Debes subir una foto para continuar.";
     } else {
 
-        // Guardar archivo localmente
-        $nombre_archivo = "evidencia_" . time() . "_" . basename($_FILES["foto"]["name"]);
-        $ruta_destino = "uploads/evidencias/" . $nombre_archivo;
+        // --------------------------------------------------
+        // Crear carpeta si no existe
+        // --------------------------------------------------
+        $carpeta = __DIR__ . "/../uploads/evidencias/";
 
-        move_uploaded_file($_FILES["foto"]["tmp_name"], $ruta_destino);
+        if (!is_dir($carpeta)) {
+            mkdir($carpeta, 0777, true);
+        }
 
         // --------------------------------------------------
-        //  GUARDAR REGISTRO EN SUPABASE
+        // Generar nombre SEGURO del archivo
         // --------------------------------------------------
-        $insert = $supabase->from("tareas_realizadas", "POST", [
+        $nombre_archivo = "evidencia_" . time() . "_" .
+            preg_replace("/[^a-zA-Z0-9._-]/", "_", $_FILES["foto"]["name"]);
+
+        // Ruta ABSOLUTA para guardar físicamente
+        $ruta_absoluta = $carpeta . $nombre_archivo;
+
+        // Ruta pública que guardaremos en Supabase
+        $ruta_publica = "/uploads/evidencias/" . $nombre_archivo;
+
+        // --------------------------------------------------
+        // Mover archivo
+        // --------------------------------------------------
+        if (!move_uploaded_file($_FILES["foto"]["tmp_name"], $ruta_absoluta)) {
+            die("Error al guardar la imagen en el servidor.");
+        }
+
+        // --------------------------------------------------
+        // GUARDAR REGISTRO EN SUPABASE
+        // --------------------------------------------------
+        $supabase->from("tareas_realizadas", "POST", [
             "usuario_id"      => $usuario_id,
             "tarea_id"        => $tarea_id,
             "estado"          => "revision",
             "fecha_envio"     => date("c"),
-            "foto_evidencia"  => "uploads/evidencias/" . $nombre_archivo,
+            "foto_evidencia"  => $ruta_publica,
         ]);
 
         header("Location: tarea_enviada.php");
