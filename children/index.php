@@ -32,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"
     if (!isset($_FILES["nueva_foto"]) || $_FILES["nueva_foto"]["error"] !== UPLOAD_ERR_OK) {
         $error_foto = "Debes seleccionar una imagen válida.";
     } else {
+
         $carpeta = __DIR__ . "/uploads/perfiles/";
         if (!is_dir($carpeta)) {
             mkdir($carpeta, 0777, true);
@@ -45,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"
 
         move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta);
 
+        // Guardar en BBDD
         $supabase->from("profiles", "PATCH", [
             "foto_perfil" => $ruta_publica
         ], "id=eq.$usuario_id");
@@ -54,18 +56,52 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"
 }
 
 /* ============================
-   TAREAS
+   TAREAS ACTIVAS
 ============================ */
-$todas = $supabase->from("tareas", "GET", null, "activa=eq.true");
+$todasTareas = $supabase->from("tareas", "GET", null, "activa=eq.true");
 
-$tareas_filtradas = [];
-foreach ($todas as $t) {
-    if ($t["tipo_asignacion"] === "general" ||
-        ($t["tipo_asignacion"] === "individual" && $t["usuario_asignado"] === $usuario_id)) {
-        $tareas_filtradas[] = $t;
+/* ============================
+   TAREAS REALIZADAS (para ocultarlas)
+============================ */
+$realizadas = $supabase->from(
+    "tareas_realizadas",
+    "GET",
+    null,
+    "usuario_id=eq.$usuario_id"
+);
+
+$tareasEnviadas = [];
+if ($realizadas) {
+    foreach ($realizadas as $r) {
+        $tareasEnviadas[$r["tarea_id"]] = $r["estado"];
     }
 }
 
+/* ============================
+   FILTRAR SOLO TAREAS DISPONIBLES
+============================ */
+$tareas_filtradas = [];
+
+if ($todasTareas) {
+    foreach ($todasTareas as $t) {
+
+        // 🔥 Opción B: si ya la hizo, NO aparece
+        if (isset($tareasEnviadas[$t["id"]])) {
+            continue;
+        }
+
+        // Tareas generales
+        if ($t["tipo_asignacion"] === "general") {
+            $tareas_filtradas[] = $t;
+        }
+        // Tareas individuales
+        else if ($t["tipo_asignacion"] === "individual" && $t["usuario_asignado"] === $usuario_id) {
+            $tareas_filtradas[] = $t;
+        }
+    }
+}
+
+// Máximo 3 tareas visibles
 $tareas_mostrar = array_slice($tareas_filtradas, 0, 3);
 
 /* ============================
@@ -103,9 +139,6 @@ $premios = $supabase->from("premios", "GET", null, "");
 
 <body>
 
-<!-- ============================
-     TOPBAR
-============================ -->
 <header class="topbar-child">
     <div class="topbar-left">
         <div class="avatar-wrapper" id="avatarBtn">
@@ -121,16 +154,15 @@ $premios = $supabase->from("premios", "GET", null, "");
     </div>
 </header>
 
-<!-- ============================
-     CONTENIDO
-============================ -->
 <main class="child-page">
 
     <div class="coins-pill">
         Tenés <span id="coins-counter" data-value="<?= $coins ?>"><?= number_format($coins, 0, ",", ".") ?></span> Ti-Coins
     </div>
 
-    <!-- TARJETAS -->
+    <!-- =======================
+         TARJETAS DE TAREAS
+    ======================== -->
     <section class="card-tareas">
         <div class="card-tareas-header">Tareas Disponibles</div>
         <div class="card-tareas-body">
@@ -144,8 +176,8 @@ $premios = $supabase->from("premios", "GET", null, "");
             <?php else: ?>
                 <?php foreach ($tareas_mostrar as $t): ?>
                     <div class="tarea-item">
-                        <div class="tarea-titulo"><?= $t["titulo"] ?></div>
-                        <div class="tarea-coins"><?= $t["coins_valor"] ?> TI-Coins</div>
+                        <div class="tarea-titulo"><?= htmlspecialchars($t["titulo"]) ?></div>
+                        <div class="tarea-coins"><?= (int)$t["coins_valor"] ?> TI-Coins</div>
 
                         <a class="tarea-btn"
                            href="<?= $puedeHacerHoy > 0 ? "tarea_realizar.php?id=".$t["id"] : "#" ?>"
@@ -158,7 +190,9 @@ $premios = $supabase->from("premios", "GET", null, "");
         </div>
     </section>
 
-    <!-- PREMIOS -->
+    <!-- =======================
+         PREMIOS
+    ======================== -->
     <section class="card-premios">
         <div class="card-premios-header">Premios Disponibles</div>
         <div class="card-premios-body">
@@ -168,7 +202,7 @@ $premios = $supabase->from("premios", "GET", null, "");
                 $ok = $coins >= $costo;
             ?>
                 <div class="premio-item">
-                    <div class="premio-nombre"><?= $p["nombre"] ?></div>
+                    <div class="premio-nombre"><?= htmlspecialchars($p["nombre"]) ?></div>
                     <div class="premio-coins"><?= number_format($costo, 0, ",", ".") ?> TI-Coins</div>
 
                     <a class="premio-btn <?= $ok ? 'ok' : 'no' ?>"
@@ -189,9 +223,9 @@ $premios = $supabase->from("premios", "GET", null, "");
 
 </main>
 
-<!-- ============================
+<!-- =======================
      MODAL FOTO PERFIL
-============================ -->
+======================= -->
 <div class="modal-overlay" id="modalFoto">
     <div class="modal">
         <h3>Tu foto de perfil</h3>
