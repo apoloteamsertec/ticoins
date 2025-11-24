@@ -4,6 +4,7 @@
 
 :root{
     --green:#3EB04B;
+    --blue:#0070c9;
     --bg:#F4F6FB;
     --text:#222;
 }
@@ -37,6 +38,28 @@ body{
     position:sticky;
     top:0;
     z-index:999;
+}
+
+/* Avatar */
+.avatar-wrapper{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#ff3b30;
+    overflow:hidden;
+    cursor:pointer;
+    border:2px solid #fff;
+    margin-right:10px;
+}
+.avatar-wrapper img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
 }
 
 .topbar-child .hola{
@@ -128,7 +151,6 @@ body{
     padding:22px 0;
 }
 
-/* TAREAS */
 .tarea-item{
     text-align:center;
     padding:12px 4px;
@@ -147,7 +169,6 @@ body{
     margin-bottom:10px;
 }
 
-/* Botón Realizar */
 .tarea-btn{
     display:inline-block;
     background:var(--green);
@@ -161,12 +182,79 @@ body{
     transition:.2s;
 }
 
-.tarea-btn:hover{
-    background:#329c40;
+/* Separador limpio entre tareas */
+.tarea-separator{
+    width:80%;
+    margin:10px auto;
+    height:1px;
+    background:#e0e0e0;
 }
 
-/* Separador */
-.tarea-separator{
+/* ===========================================================
+   TARJETA DE PREMIOS (AZUL)
+=========================================================== */
+
+.card-premios{
+    width:100%;
+    background:#fff;
+    border-radius:26px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    margin-top:26px;
+}
+
+.card-premios-header{
+    background:var(--blue);
+    padding:14px;
+    text-align:center;
+    color:white;
+    font-size:18px;
+    font-weight:600;
+}
+
+.card-premios-body{
+    padding:12px 18px 18px;
+    text-align:center;
+}
+
+.premio-item{
+    padding:10px 4px;
+}
+
+.premio-nombre{
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:4px;
+}
+
+.premio-coins{
+    font-size:13px;
+    color:var(--green);
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.premio-btn{
+    display:inline-block;
+    padding:7px 28px;
+    border-radius:999px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    color:white;
+    box-shadow:0 5px 12px rgba(0,0,0,0.20);
+    transition:.2s;
+}
+
+.premio-btn.ok{
+    background:var(--blue);
+}
+
+.premio-btn.no{
+    background:#ff9800;
+}
+
+.premio-separator{
     width:80%;
     margin:10px auto;
     height:1px;
@@ -215,8 +303,44 @@ body{
     transition:.2s;
 }
 
-.form-box button:hover{
-    background:#329c40;
+/* ===========================================================
+   MODAL FOTO PERFIL
+=========================================================== */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.4);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.modal{
+    background:#fff;
+    border-radius:16px;
+    padding:20px;
+    max-width:320px;
+    width:90%;
+    text-align:center;
+}
+
+.modal img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:10px;
+}
+
+.modal-close{
+    margin-top:10px;
+    background:#ccc;
+    border:none;
+    border-radius:8px;
+    padding:8px 14px;
+    cursor:pointer;
 }
 
 /* ===========================================================
@@ -228,38 +352,4 @@ body{
     font-size:13px;
     color:#555;
     margin-top:22px;
-}
-
-/* ===========================================================
-   SUCCESS PAGE (tarea_enviada)
-=========================================================== */
-
-.success-box{
-    text-align:center;
-    margin-top:40px;
-}
-
-.success-icon{
-    font-size:72px;
-    color:var(--green);
-    margin-bottom:10px;
-}
-
-.success-text{
-    font-size:20px;
-    font-weight:600;
-    color:#2e7a35;
-    margin-bottom:18px;
-}
-
-.volver-btn{
-    display:inline-block;
-    padding:12px 22px;
-    background:var(--green);
-    color:white;
-    text-decoration:none;
-    border-radius:12px;
-    font-size:16px;
-    font-weight:600;
-    box-shadow:0 5px 15px rgba(0,0,0,0.20);
 }
