@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $perfil = $perfil[0];
 
             // Verificar rol
-            if ($perfil["rol"] !== "niño") {
+            if ($perfil["rol"] !== "nino") {
                 $error = "Este usuario no es válido para el panel de niños.";
             }
             // Verificar PIN
