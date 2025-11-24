@@ -1,0 +1,290 @@
+/* ============================
+   TIPOGRAFÍA Y BASE
+============================ */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+    background: #F1F3F6;
+    color: #222;
+}
+
+/* ============================
+   NAVBAR SUPERIOR
+============================ */
+.topbar {
+    max-width: 100%;                 /* ← FIX PRINCIPAL */
+    background: #3EB04B;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    height: 55px;
+}
+
+.topbar .logo {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.menu li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 26px;
+    color: white;
+    cursor: pointer;
+}
+
+/* NAV RESPONSIVE */
+@media (max-width: 750px) {
+    .menu {
+        display: none;
+        position: fixed;
+        top: 55px;
+        right: 0;
+        width: 75%;
+        height: calc(100vh - 55px);
+        background: #3EB04B;
+        flex-direction: column;
+        padding: 25px 0;
+        gap: 22px;
+        box-shadow: -4px 0 14px rgba(0,0,0,0.25);
+        animation: slide .35s ease;
+    }
+
+    @keyframes slide {
+        from { transform: translateX(100%); }
+        to { transform: translateX(0); }
+    }
+
+    .menu.show {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+
+/* ============================
+   CONTENIDO CENTRADO (APP)
+============================ */
+.page {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 25px 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 720px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .container {
+        max-width: 90%;
+        border-radius: 14px;
+    }
+}
+
+/* Mobile – modo app */
+@media (max-width: 600px) {
+    .page {
+        padding: 0;
+    }
+    .container {
+        max-width: 100%;
+        min-height: calc(100vh - 55px);
+        border-radius: 0;
+        box-shadow: none;
+        padding: 18px;
+    }
+}
+
+/* ============================
+   TÍTULOS
+============================ */
+h1, h2 {
+    font-weight: 600;
+    margin-top: 0;
+}
+
+/* ============================
+   BOTONES
+============================ */
+.btn, button, input[type="submit"] {
+    background: #3EB04B;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: .25s;
+}
+
+.btn:hover, button:hover {
+    background: #349a41;
+}
+
+.btn-aceptar {
+    background: #3EB04B;
+    padding: 7px 12px;
+    border-radius: 6px;
+    color: white;
+}
+
+.btn-rechazar {
+    background: #E53935 !important;
+    padding: 7px 12px;
+    border-radius: 6px;
+    color: white;
+}
+
+/* ============================
+   TABLAS
+============================ */
+.tabla-container {
+    overflow-x: auto;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+}
+
+.tabla th {
+    background: #3EB04B;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.tabla td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.tabla tr:hover {
+    background: #f5fff6;
+}
+
+/* ============================
+   FORM BOX
+============================ */
+.form-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    margin-bottom: 12px;
+}
+
+/* ============================
+   LOGIN
+============================ */
+.login-box-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #EDEFF2;
+}
+
+.login-box {
+    max-width: 380px;
+    width: 90%;
+    background: white;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    text-align: center;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.login-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #D1D5DB;
+    font-size: 15px;
+    margin-bottom: 15px;
+    background: #F9FAFB;
+    transition: .2s;
+}
+
+.login-box input:focus {
+    border-color: #3EB04B;
+    box-shadow: 0 0 0 3px rgba(62,176,75,0.25);
+    background: #fff;
+}
+
+.login-box button {
+    margin-top: 8px;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+/* ============================
+   ALERTAS
+============================ */
+.error {
+    background: #ffebee;
+    border-left: 4px solid #E53935;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
