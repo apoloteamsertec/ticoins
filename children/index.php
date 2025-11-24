@@ -349,7 +349,7 @@ $premios = $supabase->from("premios", "GET", null, "");
                 <?php foreach($premios as $idx => $premio): ?>
                     <?php
                         // Ajusta "coins_costo" al nombre correcto en tu tabla
-                        $costo = (int)$premio["coins_costo"];
+                        $costo = (int)$premio["costo_coins"];
                         $puedeCobrar = $coins >= $costo;
                     ?>
                     <div class="premio-item">
