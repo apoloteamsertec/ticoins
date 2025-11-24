@@ -46,6 +46,30 @@ if ($tareas) {
 <link rel="stylesheet" href="css/children.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const el = document.getElementById("coins-counter");
+    const finalValue = parseInt(el.getAttribute("data-value"));
+    let current = 0;
+
+    const duration = 900; // duración total en ms
+    const steps = 30;     // suavidad
+    const increment = finalValue / steps;
+
+    function animate() {
+        current += increment;
+
+        if (current >= finalValue) {
+            el.textContent = finalValue.toLocaleString("es-AR");
+        } else {
+            el.textContent = Math.floor(current).toLocaleString("es-AR");
+            requestAnimationFrame(animate);
+        }
+    }
+
+    animate();
+});
+</script>
 
 <body>
 
@@ -72,8 +96,10 @@ if ($tareas) {
 
     <!-- PILLS DE COINS -->
     <div class="coins-pill">
-        Tenés <span><?= str_pad($coins, 5, "0", STR_PAD_LEFT) ?></span> Ti-Coins
+        Tenés <span><?= number_format($coins, 0, ",", ".") ?></span> Ti-Coins
     </div>
+
+
 
 
     <!-- TARJETA DE TAREAS DISPONIBLES -->
