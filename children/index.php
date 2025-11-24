@@ -236,39 +236,60 @@ body {
                     <a class="tarea-btn"
                        href="tarea_realizar.php?id=<?= $t["id"] ?>">Realizar</a>
                 </div>
-                <hr style="width:60%;border:none;border-top:1px solid #ddd;">
+               
             <?php endforeach; ?>
         <?php endif; ?>
         </div>
     </section>
 
-    <!-- ===== PREMIOS ===== -->
-    <section class="card-premios">
-        <div class="card-premios-header">Premios Disponibles</div>
-        <div class="card-premios-body">
+    <!-- TARJETA DE PREMIOS DISPONIBLES -->
+<section class="card-premios">
+    <div class="card-premios-header">
+        Premios Disponibles
+    </div>
 
-        <?php if(!$premios): ?>
-            <p>No hay premios disponibles</p>
+    <div class="card-premios-body">
+
+        <?php if (!$premios || count($premios) === 0): ?>
+            <p class="sin-tareas">Todavía no hay premios cargados.</p>
+
         <?php else: ?>
-            <?php foreach($premios as $p): ?>
-                <?php $costo = (int)$p["costo_coins"]; ?>
-                <?php $ok = $coins >= $costo; ?>
+
+            <?php foreach($premios as $idx => $premio): ?>
+                <?php
+                    $costo = (int)$premio["costo_coins"];
+                    $puedeCobrar = $coins >= $costo;
+                ?>
 
                 <div class="premio-item">
-                    <div class="premio-nombre"><?= $p["nombre"] ?></div>
-                    <div class="premio-coins"><?= number_format($costo,0,",",".") ?> TI-Coins</div>
 
-                    <a class="premio-btn <?= $ok ? "ok" : "no" ?>"
-                       href="<?= $ok ? "premio_cobrar.php?id=".$p["id"] : "#" ?>">
+                    <div class="premio-nombre">
+                        <?= htmlspecialchars($premio["nombre"] ?? $premio["titulo"] ?? "Premio") ?>
+                    </div>
+
+                    <div class="premio-coins">
+                        <?= number_format($costo, 0, ",", ".") ?> TI-Coins
+                    </div>
+
+                    <a href="<?= $puedeCobrar ? 'premio_cobrar.php?id=' . $premio["id"] : '#' ?>"
+                       class="premio-btn <?= $puedeCobrar ? 'ok' : 'no' ?>"
+                       <?= !$puedeCobrar ? 'style="pointer-events:none;opacity:.8;"' : '' ?>>
                        Cobrar
                     </a>
+
                 </div>
-                <hr style="width:60%;border:none;border-top:1px solid #ddd;">
+
+                <?php if($idx < count($premios)-1): ?>
+                    <div class="premio-separator"></div>
+                <?php endif; ?>
+
             <?php endforeach; ?>
+
         <?php endif; ?>
 
-        </div>
-    </section>
+    </div> <!-- cierre card-premios-body -->
+</section>
+
 
     <p style="text-align:center;margin-top:20px;">
         No te olvides nunca que tus tíos te aman mucho 💚
