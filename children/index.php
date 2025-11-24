@@ -9,72 +9,71 @@ require_once "../config/supabase.php";
 
 $usuario_id = $_SESSION["child_id"];
 
-// --------------------------------------------------
-// PERFIL DEL NIÑO
-// --------------------------------------------------
+/* ============================
+   PERFIL DEL NIÑO
+============================ */
 $perfilRes = $supabase->from("profiles", "GET", null, "id=eq.$usuario_id");
 if (!$perfilRes) {
     die("Perfil no encontrado.");
 }
-$perfil         = $perfilRes[0];
-$coins          = (int)$perfil["coins"];
-$username       = $perfil["username"];
-$nombreCompleto = $perfil["nombre_completo"];
-$fotoPerfil     = !empty($perfil["foto_perfil"]) ? $perfil["foto_perfil"] : null;
+$perfil          = $perfilRes[0];
+$coins           = (int)$perfil["coins"];
+$username        = $perfil["username"];
+$nombreCompleto  = $perfil["nombre_completo"];
+$fotoPerfil      = !empty($perfil["foto_perfil"]) ? $perfil["foto_perfil"] : null;
 
-// --------------------------------------------------
-// CAMBIAR FOTO DE PERFIL
-// --------------------------------------------------
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["accion"]) && $_POST["accion"] === "cambiar_foto") {
+/* ============================
+   CAMBIAR FOTO DE PERFIL
+============================ */
+if ($_SERVER["REQUEST_METHOD"] === "POST" 
+    && isset($_POST["accion"]) 
+    && $_POST["accion"] === "cambiar_foto") {
 
     if (!isset($_FILES["nueva_foto"]) || $_FILES["nueva_foto"]["error"] !== UPLOAD_ERR_OK) {
         $error_foto = "Debes seleccionar una imagen válida.";
     } else {
-
         $carpeta = __DIR__ . "/uploads/perfiles/";
         if (!is_dir($carpeta)) {
             mkdir($carpeta, 0777, true);
         }
 
-        $nombre_archivo = "avatar_" . $usuario_id . "_" . time() . ".jpg";
-        $ruta_absoluta  = $carpeta . $nombre_archivo;
-        $ruta_publica   = "uploads/perfiles/" . $nombre_archivo;
+        $nombre_archivo = "avatar_" . $usuario_id . "_" . time() . "_" .
+            preg_replace("/[^a-zA-Z0-9._-]/", "_", $_FILES["nueva_foto"]["name"]);
 
-        if (!move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta)) {
-            $error_foto = "No se pudo guardar la foto del perfil.";
-        } else {
-            $supabase->from("profiles", "PATCH", [
-                "foto_perfil" => $ruta_publica
-            ], "id=eq.$usuario_id");
+        $ruta_absoluta = $carpeta . $nombre_archivo;
+        $ruta_publica  = "uploads/perfiles/" . $nombre_archivo;
 
-            $fotoPerfil = $ruta_publica;
-        }
+        move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta);
+
+        $supabase->from("profiles", "PATCH", [
+            "foto_perfil" => $ruta_publica
+        ], "id=eq.$usuario_id");
+
+        $fotoPerfil = $ruta_publica;
     }
 }
 
-// --------------------------------------------------
-// TAREAS ACTIVAS
-// --------------------------------------------------
-$todasTareas = $supabase->from("tareas", "GET", null, "activa=eq.true");
-$tareas_filtradas = [];
+/* ============================
+   TAREAS
+============================ */
+$todas = $supabase->from("tareas", "GET", null, "activa=eq.true");
 
-if ($todasTareas) {
-    foreach ($todasTareas as $t) {
-        if ($t["tipo_asignacion"] === "general") {
-            $tareas_filtradas[] = $t;
-        } else if ($t["tipo_asignacion"] === "individual" && $t["usuario_asignado"] === $usuario_id) {
-            $tareas_filtradas[] = $t;
-        }
+$tareas_filtradas = [];
+foreach ($todas as $t) {
+    if ($t["tipo_asignacion"] === "general" ||
+        ($t["tipo_asignacion"] === "individual" && $t["usuario_asignado"] === $usuario_id)) {
+        $tareas_filtradas[] = $t;
     }
 }
 
 $tareas_mostrar = array_slice($tareas_filtradas, 0, 3);
 
-// --------------------------------------------------
-// LÍMITE DE 3 TAREAS POR DÍA
-// --------------------------------------------------
-$hoyInicio = date("Y-m-d") . "T00:00:00";
-$hoyFin    = date("Y-m-d") . "T23:59:59";
+/* ============================
+   LÍMITE DIARIO
+============================ */
+$hoy = date("Y-m-d");
+$hoyInicio = $hoy . "T00:00:00";
+$hoyFin    = $hoy . "T23:59:59";
 
 $realizadasHoy = $supabase->from(
     "tareas_realizadas",
@@ -84,12 +83,14 @@ $realizadasHoy = $supabase->from(
 );
 
 $cantRealizadasHoy = $realizadasHoy ? count($realizadasHoy) : 0;
-$puedeHacerHoy     = max(0, 3 - $cantRealizadasHoy);
+$limiteDiario = 3;
+$puedeHacerHoy = max(0, $limiteDiario - $cantRealizadasHoy);
 
-// --------------------------------------------------
-// PREMIOS DISPONIBLES
-// --------------------------------------------------
+/* ============================
+   PREMIOS
+============================ */
 $premios = $supabase->from("premios", "GET", null, "");
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -98,117 +99,88 @@ $premios = $supabase->from("premios", "GET", null, "");
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel Ti-Coins</title>
 <link rel="stylesheet" href="css/children.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<!-- ==============================
-     BARRA SUPERIOR
-==================================-->
+<!-- ============================
+     TOPBAR
+============================ -->
 <header class="topbar-child">
-
     <div class="topbar-left">
         <div class="avatar-wrapper" id="avatarBtn">
             <?php if($fotoPerfil): ?>
-                <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil">
+                <img src="<?= htmlspecialchars($fotoPerfil) ?>">
             <?php endif; ?>
         </div>
-
-        <div class="hola">
-            HOLA <span>@<?= strtoupper(htmlspecialchars($username)) ?></span>
-        </div>
+        <div class="hola">HOLA <span>@<?= strtoupper($username) ?></span></div>
     </div>
 
-    <div class="hamburger"><span></span><span></span><span></span></div>
+    <div class="hamburger">
+        <span></span><span></span><span></span>
+    </div>
 </header>
 
-
-
-<!-- ==============================
-     CONTENIDO CENTRAL
-==================================-->
+<!-- ============================
+     CONTENIDO
+============================ -->
 <main class="child-page">
 
-    <!-- PILLS COINS -->
     <div class="coins-pill">
-        Tenés <span><?= number_format($coins, 0, ",", ".") ?></span> Ti-Coins
+        Tenés <span id="coins-counter" data-value="<?= $coins ?>"><?= number_format($coins, 0, ",", ".") ?></span> Ti-Coins
     </div>
 
-
-    <!-- ==========================
-         TAREAS
-    =========================== -->
+    <!-- TARJETAS -->
     <section class="card-tareas">
         <div class="card-tareas-header">Tareas Disponibles</div>
-
         <div class="card-tareas-body">
 
-            <?php if ($puedeHacerHoy <= 0): ?>
-
+            <?php if($puedeHacerHoy <= 0): ?>
                 <p class="sin-tareas">¡Llegaste al máximo de tareas por hoy! 🌟</p>
 
-            <?php elseif (empty($tareas_mostrar)): ?>
-
-                <p class="sin-tareas">Por ahora no tenés tareas asignadas 😴</p>
+            <?php elseif(empty($tareas_mostrar)): ?>
+                <p class="sin-tareas">No tenés tareas asignadas 😴</p>
 
             <?php else: ?>
+                <?php foreach ($tareas_mostrar as $t): ?>
+                    <div class="tarea-item">
+                        <div class="tarea-titulo"><?= $t["titulo"] ?></div>
+                        <div class="tarea-coins"><?= $t["coins_valor"] ?> TI-Coins</div>
 
-                <?php foreach ($tareas_mostrar as $tarea): ?>
-                <div class="tarea-item">
-
-                    <div class="tarea-titulo"><?= htmlspecialchars($tarea["titulo"]) ?></div>
-
-                    <div class="tarea-coins"><?= $tarea["coins_valor"] ?> TI-Coins</div>
-
-                    <a href="tarea_realizar.php?id=<?= $tarea["id"] ?>"
-                       class="tarea-btn">
-                       Realizar
-                    </a>
-                </div>
+                        <a class="tarea-btn"
+                           href="<?= $puedeHacerHoy > 0 ? "tarea_realizar.php?id=".$t["id"] : "#" ?>"
+                           <?= $puedeHacerHoy <= 0 ? 'style="opacity:.4;pointer-events:none;"' : '' ?>
+                        >Realizar</a>
+                    </div>
                 <?php endforeach; ?>
-
             <?php endif; ?>
 
         </div>
     </section>
 
-
-
-    <!-- ==========================
-         PREMIOS
-    =========================== -->
+    <!-- PREMIOS -->
     <section class="card-premios">
         <div class="card-premios-header">Premios Disponibles</div>
-
         <div class="card-premios-body">
 
-            <?php if (!$premios): ?>
-                <p class="sin-tareas">Todavía no hay premios cargados.</p>
-            <?php else: ?>
-
-                <?php foreach ($premios as $p): ?>
-                <?php 
-                    $costo  = (int)$p["costo_coins"];
-                    $puede  = $coins >= $costo;
-                ?>
-
+            <?php foreach($premios as $p): 
+                $costo = (int)$p["costo_coins"];
+                $ok = $coins >= $costo;
+            ?>
                 <div class="premio-item">
+                    <div class="premio-nombre"><?= $p["nombre"] ?></div>
+                    <div class="premio-coins"><?= number_format($costo, 0, ",", ".") ?> TI-Coins</div>
 
-                    <div class="premio-nombre"><?= htmlspecialchars($p["nombre"]) ?></div>
-
-                    <div class="premio-coins"><?= number_format($costo,0,",",".") ?> TI-Coins</div>
-
-                    <a class="premio-btn <?= $puede ? 'ok' : 'no' ?>"
-                       href="<?= $puede ? 'premio_cobrar.php?id=' . $p["id"] : '#' ?>"
-                       <?= $puede ? '' : 'style="pointer-events:none;"' ?>>
+                    <a class="premio-btn <?= $ok ? 'ok' : 'no' ?>"
+                       href="<?= $ok ? "premio_cobrar.php?id=".$p["id"] : "#" ?>"
+                       <?= !$ok ? 'style="pointer-events:none;opacity:.7;"' : '' ?>
+                    >
                         Cobrar
                     </a>
                 </div>
 
-                <?php endforeach; ?>
-
-            <?php endif; ?>
+                <div class="premio-separator"></div>
+            <?php endforeach; ?>
 
         </div>
     </section>
@@ -217,49 +189,35 @@ $premios = $supabase->from("premios", "GET", null, "");
 
 </main>
 
-
-
-<!-- ==============================
-     MODAL FOTO DE PERFIL
-==================================-->
+<!-- ============================
+     MODAL FOTO PERFIL
+============================ -->
 <div class="modal-overlay" id="modalFoto">
     <div class="modal">
-
         <h3>Tu foto de perfil</h3>
 
         <?php if($fotoPerfil): ?>
-            <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto perfil">
+            <img src="<?= htmlspecialchars($fotoPerfil) ?>" class="modal-avatar">
         <?php else: ?>
-            <div style="width:120px;height:120px;border-radius:50%;background:#ff3b30;margin:0 auto;"></div>
+            <div class="modal-avatar-placeholder"></div>
         <?php endif; ?>
 
         <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="accion" value="cambiar_foto">
             <input type="file" name="nueva_foto" required>
-            <button class="premio-btn ok" type="submit">Cambiar foto</button>
+            <button class="modal-save">Cambiar foto</button>
         </form>
 
         <button class="modal-close" id="cerrarModal">Cerrar</button>
-
     </div>
 </div>
 
-
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
-    const avatar = document.getElementById("avatarBtn");
-    const modal  = document.getElementById("modalFoto");
-    const close  = document.getElementById("cerrarModal");
-
-    avatar.onclick = () => modal.style.display = "flex";
-    close.onclick  = () => modal.style.display = "none";
-
-    modal.onclick = (e) => {
-        if (e.target === modal) modal.style.display = "none";
-    };
-
+    const modal = document.getElementById("modalFoto");
+    document.getElementById("avatarBtn").onclick = () => modal.style.display = "flex";
+    document.getElementById("cerrarModal").onclick = () => modal.style.display = "none";
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
 });
 </script>
 
