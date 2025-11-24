@@ -60,8 +60,3 @@ if ($accion === "aprobar") {
 
 header("Location: revisar.php");
 exit;
-
- </div><!-- .container -->
-</div><!-- .page -->
-</body>
-</html>
