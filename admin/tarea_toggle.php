@@ -11,7 +11,3 @@ $supabase->from("tareas", "PATCH", [
 
 header("Location: tareas.php");
 exit;
- </div><!-- .container -->
-</div><!-- .page -->
-</body>
-</html>
