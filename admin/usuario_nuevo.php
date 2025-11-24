@@ -6,55 +6,57 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $nombre = $_POST["nombre"];
     $username = $_POST["username"];
-    $password = $_POST["password"];
-    $emailFake = $username . "@ticoins.local";
+    $pin = $_POST["pin"];   // PIN de 6 dígitos
 
-    // Crear usuario en Auth
-    $payload = json_encode([
-        "email" => $emailFake,
-        "password" => $password
-    ]);
+    // Validaciones
+    if(strlen($pin) !== 6 || !ctype_digit($pin)){
+        $error = "El PIN debe tener exactamente 6 números.";
+    } else {
 
-    $curl = curl_init(getenv("SUPABASE_URL") . "/auth/v1/signup");
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        // Crear perfil directo en tabla profiles (rol niño)
+        $insert = $supabase->from("profiles", "POST", [
+            "nombre_completo" => $nombre,
+            "username"        => $username,
+            "pin"             => $pin,
+            "rol"             => "niño",
+            "coins"           => 0
+        ]);
 
-    curl_setopt($curl, CURLOPT_HTTPHEADER, [
-        "apikey: " . getenv("SUPABASE_PUBLISHABLE_KEY"),
-        "Authorization: Bearer " . getenv("SUPABASE_PUBLISHABLE_KEY"),
-        "Content-Type: application/json"
-    ]);
-
-    $res = curl_exec($curl);
-    $nuevo = json_decode($res, true);
-
-    $id = $nuevo["user"]["id"];
-
-    // Insertar perfil
-    $supabase->from("profiles", "POST", [
-        "id" => $id,
-        "nombre_completo" => $nombre,
-        "username" => $username,
-        "rol" => "nino",
-        "coins" => 0
-    ]);
-
-    header("Location: usuarios.php");
-    exit;
+        header("Location: usuarios.php");
+        exit;
+    }
 }
 ?>
+
 <?php include 'header.php'; ?>
 
 <h2>Nuevo Usuario</h2>
 
-<form method="POST">
-    <input type="text" name="nombre" placeholder="Nombre completo" required><br>
-    <input type="text" name="username" placeholder="Username" required><br>
-    <input type="password" name="password" placeholder="Contraseña" required><br>
+<?php if(isset($error)): ?>
+    <p class="error"><?= $error ?></p>
+<?php endif; ?>
+
+<form method="POST" class="form-box">
+
+    <label>Nombre completo</label>
+    <input type="text" name="nombre" required>
+
+    <label>Username</label>
+    <input type="text" name="username" required>
+
+    <label>PIN (6 dígitos)</label>
+    <input type="text" 
+           name="pin" 
+           minlength="6" maxlength="6" 
+           pattern="[0-9]{6}" 
+           required>
+
     <button type="submit">Crear usuario</button>
 </form>
- </div><!-- .container -->
+
+</div><!-- .container -->
 </div><!-- .page -->
 </body>
 </html>
+
+

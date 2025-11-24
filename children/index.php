@@ -1,16 +1,19 @@
 <?php
 session_start();
+if(!isset($_SESSION["child_id"])){
+    header("Location: login.php");
+    exit;
+}
 require_once "../config/supabase.php";
 
-/* 🔹 IMPORTANTE:
-   El Login para niños lo agregaremos después.
-   Por ahora vamos a simular que el niño está logueado.
-*/
 
-// EJEMPLO — luego lo traeremos de Supabase
-$usuario_id   = "e373a04f-156b-4fc8-98d7-b6ea739d939e"; 
-$nombre_nino  = "Javier Ortega";
-$username     = "stitch";
+$usuario_id = $_SESSION["child_id"];
+
+$perfil = $supabase->from("profiles", "GET", null, "id=eq.$usuario_id");
+$coins = $perfil[0]["coins"];
+$username = $perfil[0]["username"];
+
+
 
 // Coins totales
 $perfil = $supabase->from("profiles", "GET", null, "id=eq.$usuario_id");
