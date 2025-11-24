@@ -12,7 +12,7 @@ if (!isset($_GET["id"])) {
 $tarea_id = $_GET["id"];
 
 // 🔹 Datos del usuario (TEMPORAL, reemplazar por login real)
-$usuario_id = "e373a04f-156b-4fc8-98d7-b6ea739d939e";
+$usuario_id = $_SESSION["child_id"];
 
 // --------------------------------------------------
 //  Obtener info de la tarea
