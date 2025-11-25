@@ -1,5 +1,5 @@
 <?php include "header.php"; require_once "../config/supabase.php"; ?>
-<?php include "auth_check.php"; ?>
+
 
 <?php
 $mensaje = "";

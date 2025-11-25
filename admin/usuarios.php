@@ -17,7 +17,6 @@ $usuarios = $supabase->from(
 );
 ?>
 <?php include 'header.php'; ?>
-<?php include "auth_check.php"; ?>
 
 
 <h1>Usuarios</h1>

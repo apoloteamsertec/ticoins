@@ -1,4 +1,4 @@
-<?php include "auth_check.php"; ?>
+
 
 <?php
 include "header.php";

@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mensaje = "Perfil actualizado!";
 }
 ?>
-<?php include "auth_check.php"; ?>
+
 
 <h2>Editar usuario</h2>
 

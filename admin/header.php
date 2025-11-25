@@ -25,7 +25,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <li><a href="tareas.php">Tareas</a></li>
         <li><a href="premios.php">Premios</a></li>
         <li><a href="revisar.php">Revisar Tareas</a></li>
-        <li><a href="../auth/logout.php">Salir</a></li>
+        <li><a href="../auth/login.php">Salir</a></li>
     </ul>
 </nav>
 
