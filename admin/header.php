@@ -3,8 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
-<?php include "auth_check.php"; ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>

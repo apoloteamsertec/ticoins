@@ -1,3 +1,5 @@
+<?php include "auth_check.php"; ?>
+
 <?php
 require_once "../auth/check_admin.php";
 require_once "../config/supabase.php";
