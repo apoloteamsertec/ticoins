@@ -85,10 +85,22 @@ $tareas_filtradas = [];
 if ($todasTareas) {
     foreach ($todasTareas as $t) {
 
-        // Si fue aprobada → ocultar
-if (isset($tareasEnviadas[$t["id"]]) && $tareasEnviadas[$t["id"]] === "aprobada") {
-    continue;
+// Ocultar tareas según estado previo del niño
+if (isset($tareasEnviadas[$t["id"]])) {
+
+    // Si está en revisión → ocultar
+    if ($tareasEnviadas[$t["id"]] === "revision") {
+        continue;
+    }
+
+    // Si fue aprobada → ocultar
+    if ($tareasEnviadas[$t["id"]] === "aprobada") {
+        continue;
+    }
+
+    // Si fue rechazada → se vuelve a mostrar (no hacemos continue)
 }
+
 
         // Tareas generales
         if ($t["tipo_asignacion"] === "general") {
