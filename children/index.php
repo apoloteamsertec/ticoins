@@ -34,26 +34,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"
     } else {
 
         $carpeta = __DIR__ . "/uploads/perfiles/";
-        if (!is_dir($carpeta)) {
-            mkdir($carpeta, 0777, true);
-        }
 
-        $nombre_archivo = "avatar_" . $usuario_id . "_" . time() . "_" .
-            preg_replace("/[^a-zA-Z0-9._-]/", "_", $_FILES["nueva_foto"]["name"]);
+if (!is_dir($carpeta)) {
+    mkdir($carpeta, 0777, true);
+}
 
-        $ruta_absoluta = $carpeta . $nombre_archivo;
+$nombre_archivo = "avatar_" . $usuario_id . "_" . time() . "_" .
+    preg_replace("/[^a-zA-Z0-9._-]/", "_", $_FILES["nueva_foto"]["name"]);
 
-        // 🔥 RUTA PÚBLICA CORRECTA PARA QUE CARGUE SIEMPRE
-        $ruta_publica  = "/children/uploads/perfiles/" . $nombre_archivo;
+$ruta_absoluta = $carpeta . $nombre_archivo;
 
-        move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta);
+// 🔥 ESTA ES LA RUTA QUE SE GUARDA EN SUPABASE
+$ruta_publica  = "children/uploads/perfiles/" . $nombre_archivo;
 
-        // Guardar en BBDD
-        $supabase->from("profiles", "PATCH", [
-            "foto_perfil" => $ruta_publica
-        ], "id=eq.$usuario_id");
+move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta);
 
-        $fotoPerfil = $ruta_publica;
+// Guardar en Supabase
+$supabase->from("profiles", "PATCH", [
+    "foto_perfil" => $ruta_publica
+], "id=eq.$usuario_id");
+
+$fotoPerfil = $ruta_publica;
+
     }
 }
 

@@ -1,5 +1,7 @@
 <?php include "header.php"; require_once "../config/supabase.php"; ?>
 
+
+
 <h2>Premios</h2>
 
 <a class="btn" href="premio_nuevo.php">➕ Nuevo premio</a>
