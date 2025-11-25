@@ -1,7 +1,4 @@
 <?php include "header.php"; require_once "../config/supabase.php"; ?>
-
-
-
 <h2>Tareas</h2>
 
 <a href="tarea_nueva.php" class="btn" style="margin-bottom:15px; display:inline-block;">
