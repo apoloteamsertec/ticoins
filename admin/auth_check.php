@@ -10,7 +10,7 @@ ob_start();
 
 // Verifica acceso
 if (!isset($_SESSION["admin_id"])) {
-    header("Location: login.php");
+    header("Location: /admin/index.php");
     exit;
 }
 

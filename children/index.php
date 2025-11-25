@@ -1,7 +1,6 @@
 <?php
 session_start();
 if (!isset($_SESSION["child_id"])) {
-    header("Location: login.php");
     exit;
 }
 
@@ -43,7 +42,7 @@ $nombre_archivo = "avatar_" . $usuario_id . "_" . time() . "_" .
     preg_replace("/[^a-zA-Z0-9._-]/", "_", $_FILES["nueva_foto"]["name"]);
 
 $ruta_absoluta = $carpeta . $nombre_archivo;
-$ruta_publica  = "children/uploads/perfiles/" . $nombre_archivo;
+$ruta_publica  = "/uploads/perfiles/" . $nombre_archivo;
 
 move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta);
 
