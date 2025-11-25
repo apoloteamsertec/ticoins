@@ -1,6 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION["child_id"])) {
+    header("Location: login.php");
     exit;
 }
 
@@ -12,14 +13,13 @@ $usuario_id = $_SESSION["child_id"];
    PERFIL DEL NIÑO
 ============================ */
 $perfilRes = $supabase->from("profiles", "GET", null, "id=eq.$usuario_id");
-if (!$perfilRes) {
-    die("Perfil no encontrado.");
-}
+if (!$perfilRes) die("Perfil no encontrado.");
+
 $perfil          = $perfilRes[0];
 $coins           = (int)$perfil["coins"];
 $username        = $perfil["username"];
 $nombreCompleto  = $perfil["nombre_completo"];
-$fotoPerfil      = !empty($perfil["foto_perfil"]) ? $perfil["foto_perfil"] : null;
+$fotoPerfil      = $perfil["foto_perfil"] ? "/" . ltrim($perfil["foto_perfil"], "/") : null;
 
 /* ============================
    CAMBIAR FOTO DE PERFIL
@@ -28,35 +28,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"
     && isset($_POST["accion"]) 
     && $_POST["accion"] === "cambiar_foto") {
 
-    if (!isset($_FILES["nueva_foto"]) || $_FILES["nueva_foto"]["error"] !== UPLOAD_ERR_OK) {
-        $error_foto = "Debes seleccionar una imagen válida.";
-    } else {
+    if (isset($_FILES["nueva_foto"]) && $_FILES["nueva_foto"]["error"] === UPLOAD_ERR_OK) {
 
-$carpeta = __DIR__ . "/uploads/perfiles/";
+        $carpeta = __DIR__ . "/uploads/perfiles/";
+        if (!is_dir($carpeta)) mkdir($carpeta, 0777, true);
 
-if (!is_dir($carpeta)) {
-    mkdir($carpeta, 0777, true);
-}
+        $nombre_archivo = "avatar_" . $usuario_id . "_" . time() . "_" .
+            preg_replace("/[^a-zA-Z0-9._-]/", "_", $_FILES["nueva_foto"]["name"]);
 
-$nombre_archivo = "avatar_" . $usuario_id . "_" . time() . "_" .
-    preg_replace("/[^a-zA-Z0-9._-]/", "_", $_FILES["nueva_foto"]["name"]);
+        $ruta_absoluta = $carpeta . $nombre_archivo;
+        $ruta_publica  = "uploads/perfiles/" . $nombre_archivo;
 
-$ruta_absoluta = $carpeta . $nombre_archivo;
-$ruta_publica  = "/uploads/perfiles/" . $nombre_archivo;
+        move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta);
 
-move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta);
+        $supabase->from("profiles", "PATCH", [
+            "foto_perfil" => $ruta_publica
+        ], "id=eq.$usuario_id");
 
-// Supabase update
-$supabase->from("profiles", "PATCH", [
-    "foto_perfil" => $ruta_publica
-], "id=eq.$usuario_id");
-
-$fotoPerfil = $ruta_publica;
-
-
+        $fotoPerfil = "/" . $ruta_publica;
     }
 }
-
 
 /* ============================
    TAREAS ACTIVAS
@@ -64,7 +55,7 @@ $fotoPerfil = $ruta_publica;
 $todasTareas = $supabase->from("tareas", "GET", null, "activa=eq.true");
 
 /* ============================
-   TAREAS REALIZADAS (para ocultarlas)
+   TAREAS REALIZADAS
 ============================ */
 $realizadas = $supabase->from(
     "tareas_realizadas",
@@ -73,54 +64,43 @@ $realizadas = $supabase->from(
     "usuario_id=eq.$usuario_id"
 );
 
-$tareasEnviadas = [];
+$tareasEstado = [];
 if ($realizadas) {
     foreach ($realizadas as $r) {
-        $tareasEnviadas[$r["tarea_id"]] = $r["estado"];
+        $tareasEstado[$r["tarea_id"]] = $r["estado"]; // aprobada, revision, rechazada
     }
 }
 
 /* ============================
-   FILTRAR SOLO TAREAS DISPONIBLES
+   FILTRAR TAREAS DISPONIBLES
 ============================ */
 $tareas_filtradas = [];
 
-if ($todasTareas) {
-    foreach ($todasTareas as $t) {
+foreach ($todasTareas as $t) {
+    $id = $t["id"];
 
-// Ocultar tareas según estado previo del niño
-if (isset($tareasEnviadas[$t["id"]])) {
-
-    // Si está en revisión → ocultar
-    if ($tareasEnviadas[$t["id"]] === "revision") {
+    // Si está aprobada → NO mostrar más
+    if (isset($tareasEstado[$id]) && $tareasEstado[$id] === "aprobada") {
         continue;
     }
 
-    // Si fue aprobada → ocultar
-    if ($tareasEnviadas[$t["id"]] === "aprobada") {
+    // Si está en revisión → NO mostrar hasta que el admin resuelva
+    if (isset($tareasEstado[$id]) && $tareasEstado[$id] === "revision") {
         continue;
     }
 
-    // Si fue rechazada → se vuelve a mostrar (no hacemos continue)
-}
-
-
-        // Tareas generales
-        if ($t["tipo_asignacion"] === "general") {
-            $tareas_filtradas[] = $t;
-        }
-        // Tareas individuales
-        else if ($t["tipo_asignacion"] === "individual" && $t["usuario_asignado"] === $usuario_id) {
-            $tareas_filtradas[] = $t;
-        }
+    // Si está rechazada → volver a mostrarla
+    if ($t["tipo_asignacion"] === "general" ||
+        ($t["tipo_asignacion"] === "individual" && $t["usuario_asignado"] === $usuario_id)) {
+        $tareas_filtradas[] = $t;
     }
 }
 
-// Máximo 3 tareas visibles
+// máx 3 tareas por día
 $tareas_mostrar = array_slice($tareas_filtradas, 0, 3);
 
 /* ============================
-   LÍMITE DIARIO (CORREGIDO)
+   LÍMITE DIARIO
 ============================ */
 $hoy = date("Y-m-d");
 $hoyInicio = $hoy . "T00:00:00";
@@ -133,33 +113,14 @@ $realizadasHoy = $supabase->from(
     "usuario_id=eq.$usuario_id&fecha_envio=gte.$hoyInicio&fecha_envio=lte.$hoyFin"
 );
 
-// Solo cuentan tareas enviadas que NO estén rechazadas
-$contador = 0;
-
-if ($realizadasHoy) {
-    foreach ($realizadasHoy as $reg) {
-
-        if ($reg["estado"] === "aprobada") {
-            $contador++;
-        }
-
-        if ($reg["estado"] === "revision") {
-            $contador++;
-        }
-
-        // SI ES RECHAZADA, NO SUMA
-    }
-}
-
+$cantRealizadasHoy = $realizadasHoy ? count($realizadasHoy) : 0;
 $limiteDiario = 3;
-$puedeHacerHoy = max(0, $limiteDiario - $contador);
-
+$puedeHacerHoy = max(0, $limiteDiario - $cantRealizadasHoy);
 
 /* ============================
-   PREMIOS (solo activos)
+   PREMIOS ACTIVOS
 ============================ */
 $premios = $supabase->from("premios", "GET", null, "activo=eq.true");
-
 
 ?>
 <!DOCTYPE html>
@@ -191,11 +152,15 @@ $premios = $supabase->from("premios", "GET", null, "activo=eq.true");
 <main class="child-page">
 
     <div class="coins-pill">
-        Tenés <span id="coins-counter" data-value="<?= $coins ?>"><?= number_format($coins, 0, ",", ".") ?></span> Ti-Coins
+        Tenés 
+        <span id="coins-counter" data-value="<?= $coins ?>">
+            <?= number_format($coins, 0, ",", ".") ?>
+        </span> 
+        Ti-Coins
     </div>
 
     <!-- =======================
-         TARJETAS DE TAREAS
+         TAREAS
     ======================== -->
     <section class="card-tareas">
         <div class="card-tareas-header">Tareas Disponibles</div>
@@ -242,9 +207,7 @@ $premios = $supabase->from("premios", "GET", null, "activo=eq.true");
                     <a class="premio-btn <?= $ok ? 'ok' : 'no' ?>"
                        href="<?= $ok ? "premio_cobrar.php?id=".$p["id"] : "#" ?>"
                        <?= !$ok ? 'style="pointer-events:none;opacity:.7;"' : '' ?>
-                    >
-                        Cobrar
-                    </a>
+                    >Cobrar</a>
                 </div>
 
                 <div class="premio-separator"></div>
