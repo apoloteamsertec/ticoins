@@ -30,18 +30,23 @@ if (!$premio) {
 }
 $premio = $premio[0];
 
-$valor = (int)$premio["coins_valor"];
+// EL CAMPO CORRECTO ES costo_coins
+$costo = (int)$premio["costo_coins"];
 
 // ----------------------------------------
-// OBTENER COINS DEL NIÑO
+// OBTENER PERFIL Y COINS DEL NIÑO
 // ----------------------------------------
 $perfil = $supabase->from("profiles", "GET", null, "id=eq.$usuario_id");
-$coins_actuales = (int)$perfil[0]["coins"];
+if (!$perfil) {
+    die("Error cargando el perfil.");
+}
+$perfil = $perfil[0];
+$coins_actuales = (int)$perfil["coins"];
 
 // ----------------------------------------
-// VERIFICAR SI TIENE SUFICIENTES COINS
+// VERIFICAR SI TIENE SUFICIENTES TI-COINS
 // ----------------------------------------
-if ($coins_actuales < $valor) {
+if ($coins_actuales < $costo) {
     die("No tenés suficientes Ti-Coins para este premio.");
 }
 
@@ -62,19 +67,19 @@ if (!empty($canje_existente)) {
 }
 
 // ----------------------------------------
-// REGISTRAR EN premios_canjeados
+// REGISTRAR EL CANJE
 // ----------------------------------------
 $insert = $supabase->from("premios_canjeados", "POST", [
-    "usuario_id"   => $usuario_id,
-    "premio_id"    => $premio_id,
-    "fecha_canje"  => $hoy,
-    "coins_gastados" => $valor
+    "usuario_id"     => $usuario_id,
+    "premio_id"      => $premio_id,
+    "fecha_canje"    => $hoy,
+    "coins_gastados" => $costo
 ]);
 
 // ----------------------------------------
-// DESCONTAR COINS DEL PERFIL
+// DESCONTAR COINS DEL PERFIL DEL NIÑO
 // ----------------------------------------
-$nuevos_coins = $coins_actuales - $valor;
+$nuevos_coins = $coins_actuales - $costo;
 
 $update = $supabase->from("profiles", "PATCH", [
     "coins" => $nuevos_coins
