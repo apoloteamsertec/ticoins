@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"
         $error_foto = "Debes seleccionar una imagen válida.";
     } else {
 
-        $carpeta = __DIR__ . "/uploads/perfiles/";
+$carpeta = __DIR__ . "/uploads/perfiles/";
 
 if (!is_dir($carpeta)) {
     mkdir($carpeta, 0777, true);
@@ -43,18 +43,17 @@ $nombre_archivo = "avatar_" . $usuario_id . "_" . time() . "_" .
     preg_replace("/[^a-zA-Z0-9._-]/", "_", $_FILES["nueva_foto"]["name"]);
 
 $ruta_absoluta = $carpeta . $nombre_archivo;
-
-// 🔥 ESTA ES LA RUTA QUE SE GUARDA EN SUPABASE
 $ruta_publica  = "children/uploads/perfiles/" . $nombre_archivo;
 
 move_uploaded_file($_FILES["nueva_foto"]["tmp_name"], $ruta_absoluta);
 
-// Guardar en Supabase
+// Supabase update
 $supabase->from("profiles", "PATCH", [
     "foto_perfil" => $ruta_publica
 ], "id=eq.$usuario_id");
 
 $fotoPerfil = $ruta_publica;
+
 
     }
 }
