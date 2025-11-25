@@ -85,10 +85,10 @@ $tareas_filtradas = [];
 if ($todasTareas) {
     foreach ($todasTareas as $t) {
 
-        // 🔥 Opción B: si ya la hizo, NO aparece
-        if (isset($tareasEnviadas[$t["id"]])) {
-            continue;
-        }
+        // Si fue aprobada → ocultar
+if (isset($tareasEnviadas[$t["id"]]) && $tareasEnviadas[$t["id"]] === "aprobada") {
+    continue;
+}
 
         // Tareas generales
         if ($t["tipo_asignacion"] === "general") {
@@ -105,7 +105,7 @@ if ($todasTareas) {
 $tareas_mostrar = array_slice($tareas_filtradas, 0, 3);
 
 /* ============================
-   LÍMITE DIARIO
+   LÍMITE DIARIO (CORREGIDO)
 ============================ */
 $hoy = date("Y-m-d");
 $hoyInicio = $hoy . "T00:00:00";
@@ -118,9 +118,27 @@ $realizadasHoy = $supabase->from(
     "usuario_id=eq.$usuario_id&fecha_envio=gte.$hoyInicio&fecha_envio=lte.$hoyFin"
 );
 
-$cantRealizadasHoy = $realizadasHoy ? count($realizadasHoy) : 0;
+// Solo cuentan tareas enviadas que NO estén rechazadas
+$contador = 0;
+
+if ($realizadasHoy) {
+    foreach ($realizadasHoy as $reg) {
+
+        if ($reg["estado"] === "aprobada") {
+            $contador++;
+        }
+
+        if ($reg["estado"] === "revision") {
+            $contador++;
+        }
+
+        // SI ES RECHAZADA, NO SUMA
+    }
+}
+
 $limiteDiario = 3;
-$puedeHacerHoy = max(0, $limiteDiario - $cantRealizadasHoy);
+$puedeHacerHoy = max(0, $limiteDiario - $contador);
+
 
 /* ============================
    PREMIOS
