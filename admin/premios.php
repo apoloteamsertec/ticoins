@@ -29,20 +29,25 @@ $premios = $supabase->from("premios", "GET");
         <?php endif; ?>
     </td>
 
-    <td><?= $p["nombre"] ?></td>
-    <td><?= $p["costo_coins"] ?></td>
+    <td><?= htmlspecialchars($p["nombre"]) ?></td>
+    <td><?= number_format($p["costo_coins"], 0, ",", ".") ?></td>
     <td><?= $p["activo"] ? "Activo" : "Inactivo" ?></td>
 
     <td>
-        <a href="premio_editar.php?id=<?= $p['id'] ?>">✏️ Editar</a> |
-        <a href="premio_toggle.php?id=<?= $p['id'] ?>">⏯ Activar/Desactivar</a>
+        <a href="premio_editar.php?id=<?= $p['id'] ?>" class="btn-editar">Editar</a>
+
+        <a href="premio_toggle.php?id=<?= $p['id'] ?>" class="btn-toggle">
+            Toggle
+        </a>
     </td>
 
 </tr>
 <?php endforeach; ?>
 
 </table>
- </div><!-- .container -->
+
+</div><!-- .container -->
 </div><!-- .page -->
 </body>
 </html>
+

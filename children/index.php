@@ -156,9 +156,10 @@ $puedeHacerHoy = max(0, $limiteDiario - $contador);
 
 
 /* ============================
-   PREMIOS
+   PREMIOS (solo activos)
 ============================ */
-$premios = $supabase->from("premios", "GET", null, "");
+$premios = $supabase->from("premios", "GET", null, "activo=eq.true");
+
 
 ?>
 <!DOCTYPE html>
